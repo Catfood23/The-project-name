@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>IDT Smart Community Design System</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Figtree:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#F5F8F7;--surf:#fff;--surf2:#EAF1F0;--ink:#14262B;--mute:#4A5E63;--line:#D3DFDD;--pri:#1F6F78;--pri-t:#fff;--pri-soft:#D9ECEC;--sec:#4A4E9C;--sec-soft:#E4E5F5;--acc:#F2B544;--acc-ink:#14262B;--err:#B3261E;--ok:#2E7D4F;--r:16px;--ff:#1F6F78}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1A1D;--surf:#16272B;--surf2:#1D3237;--ink:#EAF2F1;--mute:#A3B8BB;--line:#2C4247;--pri:#5CC0C9;--pri-t:#0E1A1D;--pri-soft:#1D3A3E;--sec:#A9ADF0;--sec-soft:#26294F;--err:#FF8A80;--ok:#6FD39A;--ff:#5CC0C9}}
+:root[data-theme="dark"]{--bg:#0E1A1D;--surf:#16272B;--surf2:#1D3237;--ink:#EAF2F1;--mute:#A3B8BB;--line:#2C4247;--pri:#5CC0C9;--pri-t:#0E1A1D;--pri-soft:#1D3A3E;--sec:#A9ADF0;--sec-soft:#26294F;--err:#FF8A80;--ok:#6FD39A;--ff:#5CC0C9}
+*{box-sizing:border-box}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 Figtree,system-ui,sans-serif}
+h1,h2,h3{font-family:'Bricolage Grotesque',Georgia,serif;letter-spacing:-.02em;line-height:1.15;margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+header{padding:64px 0 40px}
+h1{font-size:clamp(36px,6vw,60px)}
+.lead{font-size:19px;color:var(--mute);max-width:60ch}
+section{padding:48px 0;border-top:1px solid var(--line)}
+h2{font-size:30px;margin-bottom:8px}h3{font-size:20px;margin:28px 0 12px}
+p{margin:0 0 12px;max-width:70ch}.mute{color:var(--mute)}.sm{font-size:14px}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.sw{border-radius:var(--r);overflow:hidden;border:1px solid var(--line);background:var(--surf)}
+.sw i{display:block;height:72px}.sw div{padding:10px 12px;font-size:14px}.sw b{display:block;font-size:15px}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+table{width:100%;border-collapse:collapse;font-size:15px}th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.scroll{overflow-x:auto}
+code{font:500 13px ui-monospace,Menlo,monospace;background:var(--surf2);padding:2px 6px;border-radius:6px}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+/* components */
+.btn{min-height:48px;padding:0 24px;border-radius:999px;border:2px solid transparent;font:600 16px Figtree,sans-serif;cursor:pointer;transition:transform .2s ease-out,background .2s ease-out,box-shadow .2s;display:inline-flex;align-items:center;gap:8px}
+.btn:active{transform:scale(.97)}
+.b1{background:var(--pri);color:var(--pri-t)}.b1:hover,.b1.h{filter:brightness(1.1);box-shadow:0 4px 12px rgba(31,111,120,.3)}
+.b2{background:transparent;color:var(--pri);border-color:var(--pri)}.b2:hover,.b2.h{background:var(--pri-soft)}
+.b3{background:var(--pri-soft);color:var(--ink)}.b4{background:var(--acc);color:var(--acc-ink)}
+.b5{background:transparent;color:var(--pri);padding:0 12px}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn.act{transform:scale(.97);filter:brightness(.9)}
+.spin{width:18px;height:18px;border:3px solid currentColor;border-right-color:transparent;border-radius:50%;animation:s .8s linear infinite}
+@keyframes s{to{transform:rotate(360deg)}}
+:focus-visible,.ff{outline:3px solid var(--ff);outline-offset:3px}
+.fld{display:block;min-width:220px;flex:1}.fld span{display:block;font:600 14px Figtree;margin-bottom:6px}
+.inp{width:100%;min-height:48px;padding:0 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--surf);color:var(--ink);font:400 16px Figtree}
+.inp.fill{background:var(--surf2);border-color:transparent}
+.inp:hover{border-color:var(--mute)}.inp:focus{border-color:var(--pri);outline:3px solid var(--pri-soft)}
+.inp.err{border-color:var(--err)}.inp:disabled{opacity:.5}
+.msg{font-size:13px;margin-top:4px}.msg.e{color:var(--err)}
+.chip{display:inline-flex;align-items:center;min-height:40px;padding:0 16px;border-radius:999px;background:var(--surf2);font:500 14px Figtree}
+.chip.on{background:var(--pri);color:var(--pri-t)}
+.tag{display:inline-block;padding:2px 10px;border-radius:999px;font:600 12px Figtree;background:var(--sec-soft);color:var(--sec)}
+.tag.p{background:var(--pri-soft);color:var(--pri)}.tag.a{background:var(--acc);color:var(--acc-ink)}
+.av{width:40px;height:40px;border-radius:50%;background:var(--sec-soft);color:var(--sec);display:grid;place-items:center;font:600 14px Figtree;flex:none}
+.img{background:linear-gradient(135deg,var(--pri-soft),var(--sec-soft));border-radius:12px;height:120px}
+/* phone */
+.phones{display:flex;gap:24px;overflow-x:auto;padding:8px 4px 20px}
+.ph{flex:none;width:300px;height:560px;background:var(--bg);border:8px solid var(--ink);border-radius:36px;display:flex;flex-direction:column;overflow:hidden}
+.ph .body{flex:1;overflow:hidden;padding:16px;display:flex;flex-direction:column;gap:12px}
+.ph h4{margin:0;font:700 22px 'Bricolage Grotesque',serif}
+.cap{font-size:13px;color:var(--mute);text-align:center;margin-top:8px;width:300px}
+.mini{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:12px;font-size:14px;line-height:1.4}
+.bn{display:flex;background:var(--surf);border-top:1px solid var(--line);padding:6px 4px 8px}
+.bn a{flex:1;min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font:500 11px Figtree;color:var(--mute);text-decoration:none;position:relative}
+.bn a svg{width:24px;height:24px}
+.bn a.on{color:var(--pri);font-weight:600}.bn a.on::before{content:"";position:absolute;top:0;width:28px;height:3px;border-radius:3px;background:var(--pri)}
+.bub{max-width:80%;padding:10px 14px;border-radius:18px;font-size:14px;line-height:1.4}
+.me{align-self:flex-end;background:var(--pri);color:var(--pri-t);border-bottom-right-radius:4px}
+.them{align-self:flex-start;background:var(--surf2);border-bottom-left-radius:4px}
+/* desktop */
+.desk{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:grid;grid-template-columns:200px 1fr 220px;min-width:760px;background:var(--bg)}
+.sb{background:var(--surf);border-right:1px solid var(--line);padding:20px 12px;display:flex;flex-direction:column;gap:4px}
+.sb a{min-height:48px;display:flex;align-items:center;gap:12px;padding:0 14px;border-radius:12px;color:var(--mute);font:500 15px Figtree;text-decoration:none}
+.sb a:hover{background:var(--surf2)}.sb a.on{background:var(--pri-soft);color:var(--pri);font-weight:600}
+.sb a svg{width:22px;height:22px}
+.feed{padding:20px;display:flex;flex-direction:column;gap:12px}.rail{padding:20px 16px 20px 0;display:flex;flex-direction:column;gap:12px}
+.ok{color:var(--ok);font-weight:600}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><defs>
+<symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol>
+<symbol id="i-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></symbol>
+<symbol id="i-msg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17V11a6 6 0 0 1 12 0v6l2 2H4zM10 21h4"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+</defs></svg>
+
+<header><div class="wrap">
+<h1>IDT Smart Community<br>Design System</h1>
+<p class="lead">Calm, clean and friendly. A feed-first interface for residents and admins, with generous space, large type and big touch targets. Version 1.0 for the prototype build.</p>
+<div class="row sm mute"><span class="tag p">WCAG 2.1 AA</span><span class="tag">Mobile first</span><span class="tag a">Desktop 1366–1440</span></div>
+</div></header>
+
+<main class="wrap">
+
+<section id="color"><h2>1. Color</h2>
+<p>A harbor-teal primary gives calm and trust. Dusk indigo separates community content from personal content. Marigold is used sparingly for one highlight per screen. Everything else is soft neutrals. Contrast ratios are measured on the listed pairing.</p>
+<div class="grid">
+<div class="sw"><i style="background:#1F6F78"></i><div><b>Harbor (primary)</b><code>#1F6F78</code><br>White text 5.9:1 ✓</div></div>
+<div class="sw"><i style="background:#4A4E9C"></i><div><b>Dusk (secondary)</b><code>#4A4E9C</code><br>White text 7.4:1 ✓</div></div>
+<div class="sw"><i style="background:#F2B544"></i><div><b>Marigold (accent)</b><code>#F2B544</code><br>Ink text 9.1:1 ✓</div></div>
+<div class="sw"><i style="background:#14262B"></i><div><b>Ink (text)</b><code>#14262B</code><br>On Mist 15:1 ✓</div></div>
+<div class="sw"><i style="background:#4A5E63"></i><div><b>Slate (muted text)</b><code>#4A5E63</code><br>On white 6.6:1 ✓</div></div>
+<div class="sw"><i style="background:#F5F8F7"></i><div><b>Mist (background)</b><code>#F5F8F7</code></div></div>
+<div class="sw"><i style="background:#fff"></i><div><b>Surface</b><code>#FFFFFF</code></div></div>
+<div class="sw"><i style="background:#EAF1F0"></i><div><b>Surface 2 / fill</b><code>#EAF1F0</code></div></div>
+<div class="sw"><i style="background:#D3DFDD"></i><div><b>Line</b><code>#D3DFDD</code><br>Decorative borders only</div></div>
+<div class="sw"><i style="background:#B3261E"></i><div><b>Error</b><code>#B3261E</code><br>On white 6.5:1 ✓</div></div>
+<div class="sw"><i style="background:#2E7D4F"></i><div><b>Success</b><code>#2E7D4F</code><br>On white 5.3:1 ✓</div></div>
+</div>
+<h3>Usage rules</h3>
+<div class="scroll"><table>
+<tr><th>Color</th><th>Use for</th><th>Never for</th></tr>
+<tr><td>Harbor</td><td>Main action per screen, active nav, links, own message bubbles</td><td>Large background areas</td></tr>
+<tr><td>Dusk</td><td>Community-wide content tags, admin badges, official announcements</td><td>Primary buttons</td></tr>
+<tr><td>Marigold</td><td>One highlight: “Happening today” or a new-count badge</td><td>Text on white, more than once per screen</td></tr>
+<tr><td>Error / Success</td><td>Validation and confirmation, always paired with an icon or text</td><td>Color as the only signal</td></tr>
+</table></div>
+<p class="sm mute" style="margin-top:12px">Dark mode tokens are included in this page's CSS (toggle your device theme). Harbor lifts to <code>#5CC0C9</code> and Dusk to <code>#A9ADF0</code> for contrast on dark surfaces.</p>
+</section>
+
+<section id="type"><h2>2. Typography</h2>
+<p><b>Bricolage Grotesque</b> for headlines: friendly, slightly quirky and distinct from generic social apps. <b>Figtree</b> for everything else: open, very readable at small sizes. Both are on Google Fonts. Fallbacks: Georgia, system-ui.</p>
+<div class="card">
+<div style="font:700 40px/1.15 'Bricolage Grotesque',serif;letter-spacing:-.02em">Good morning, Priya</div>
+<div style="font:700 28px/1.2 'Bricolage Grotesque',serif;margin-top:14px">Courtyard clean-up this Saturday</div>
+<div style="font:600 20px/1.3 Figtree;margin-top:14px">Rooftop garden volunteers needed</div>
+<p style="margin-top:10px">Join your neighbors on the roof terrace to plant herbs for the shared kitchen. Tools and snacks are provided; all ages welcome.</p>
+<div class="mute sm">Posted by Block C committee · 2 hours ago</div>
+</div>
+<div class="scroll" style="margin-top:16px"><table>
+<tr><th>Style</th><th>Font</th><th>Mobile / Desktop</th><th>Weight</th><th>Line height</th><th>Tracking</th></tr>
+<tr><td>Display</td><td>Bricolage</td><td>32 / 44</td><td>700</td><td>1.15</td><td>-0.02em</td></tr>
+<tr><td>Headline</td><td>Bricolage</td><td>24 / 30</td><td>700</td><td>1.2</td><td>-0.01em</td></tr>
+<tr><td>Title</td><td>Figtree</td><td>18 / 20</td><td>600</td><td>1.3</td><td>0</td></tr>
+<tr><td>Body</td><td>Figtree</td><td>16 / 16</td><td>400</td><td>1.6</td><td>0</td></tr>
+<tr><td>Label</td><td>Figtree</td><td>14 / 14</td><td>600</td><td>1.4</td><td>0.01em</td></tr>
+<tr><td>Caption</td><td>Figtree</td><td>13 / 13</td><td>500</td><td>1.4</td><td>0.01em</td></tr>
+</table></div>
+<p class="sm mute" style="margin-top:12px">Minimum text size is 13px, and only for captions. Keep line length under 70 characters. Use sentence case everywhere and avoid all-caps labels.</p>
+</section>
+
+<section id="space"><h2>3. Layout &amp; spacing</h2>
+<p>All spacing uses an 8px scale: <code>4 · 8 · 16 · 24 · 32 · 48 · 64</code>. Use 16 inside cards’ elements, 24 card padding on desktop, and 32+ between sections. When in doubt, add space instead of a divider.</p>
+<div class="grid">
+<div class="card"><b>Mobile (&lt;768)</b><p class="sm mute">Screen margin 16 · card gap 12 · card padding 16 · radius 16 · one column</p></div>
+<div class="card"><b>Tablet (768–1199)</b><p class="sm mute">Margin 24 · card gap 16 · feed max 640 centered · icon-rail nav</p></div>
+<div class="card"><b>Desktop (≥1200)</b><p class="sm mute">Margin 32 · 240px nav · feed 600–680 · 320px right rail · card padding 24</p></div>
+</div>
+<p class="sm mute" style="margin-top:12px">Radius: 12 inputs and images, 16 cards, 999 buttons and chips. One soft shadow only, for floating elements: <code>0 8px 24px rgba(20,38,43,.12)</code>. Cards otherwise rely on a 1px line border.</p>
+</section>
+
+<section id="components"><h2>4. Components</h2>
+<h3>Buttons</h3>
+<p class="sm mute">Height 48px, 24px side padding, 16px/600 label. One primary button per screen.</p>
+<div class="row"><button class="btn b1">Primary</button><button class="btn b2">Secondary</button><button class="btn b3">Tonal</button><button class="btn b4">Highlight</button><button class="btn b5">Text</button></div>
+<div class="row sm" style="margin-top:12px"><span class="mute">States:</span><button class="btn b1">Default</button><button class="btn b1 h">Hover</button><button class="btn b1 act">Active</button><button class="btn b1 ff">Focus</button><button class="btn b1" disabled>Disabled</button><button class="btn b1"><span class="spin"></span>Saving</button></div>
+
+<h3>Inputs</h3>
+<p class="sm mute">Height 48px, 12px radius, label always visible above the field. Outlined is the default; filled is for search and chat.</p>
+<div class="row" style="align-items:flex-start">
+<label class="fld"><span>Outlined</span><input class="inp" placeholder="Describe the issue"></label>
+<label class="fld"><span>Filled</span><input class="inp fill" placeholder="Search the community"></label>
+<label class="fld"><span>Focused</span><input class="inp" style="border-color:var(--pri);outline:3px solid var(--pri-soft)" value="Block C lift"></label>
+<label class="fld"><span>Error</span><input class="inp err" value="Lift"><div class="msg e">Add at least 10 characters so we can find the problem.</div></label>
+<label class="fld"><span>Disabled</span><input class="inp" disabled value="Unit 12B"></label>
+</div>
+
+<h3>Cards, chips and tags</h3>
+<div class="grid">
+<div class="card"><div class="img"></div><h3 style="margin:12px 0 4px;font-size:18px">Content card</h3><p class="sm mute" style="margin:0">16px radius, 1px line border, 16–24px padding. Image on top when useful; one action at the bottom.</p></div>
+<div class="card"><div class="row"><span class="chip on">All</span><span class="chip">Maintenance</span><span class="chip">Safety</span></div><div class="row" style="margin-top:16px"><span class="tag">Community</span><span class="tag p">For you</span><span class="tag a">Today</span></div><p class="sm mute" style="margin-top:12px">Chips filter (40px tall, 8px apart). Tags label (read-only).</p></div>
+</div>
+</section>
+
+<section id="nav"><h2>5. Navigation</h2>
+<p>Same five destinations everywhere: Home, Calendar, Messages, Updates, Profile. Active state is Harbor color plus a bold label and a 3px indicator on mobile or a soft pill on desktop. The shape changes, the logic stays the same.</p>
+<div class="phones" style="padding-bottom:0"><div>
+<div class="ph" style="height:auto;border-radius:28px"><nav class="bn">
+<a class="on" href="#nav"><svg><use href="#i-home"/></svg>Home</a><a href="#nav"><svg><use href="#i-cal"/></svg>Calendar</a><a href="#nav"><svg><use href="#i-msg"/></svg>Messages</a><a href="#nav"><svg><use href="#i-bell"/></svg>Updates</a><a href="#nav"><svg><use href="#i-user"/></svg>Profile</a></nav></div>
+<div class="cap">Mobile bottom bar: 64px tall, 24px icons, 11px labels, 48px+ targets</div></div></div>
+<div class="scroll" style="margin-top:20px"><div class="desk" style="grid-template-columns:200px 1fr;min-width:480px"><div class="sb">
+<div style="font:700 18px 'Bricolage Grotesque';padding:4px 14px 16px">IDT Community</div>
+<a class="on" href="#nav"><svg><use href="#i-home"/></svg>Home</a><a href="#nav"><svg><use href="#i-cal"/></svg>Calendar</a><a href="#nav"><svg><use href="#i-msg"/></svg>Messages</a><a href="#nav"><svg><use href="#i-bell"/></svg>Updates</a><a href="#nav"><svg><use href="#i-user"/></svg>Profile</a></div>
+<div class="feed"><span class="mute sm">Desktop left nav: 240px at 1366+, 48px rows, icon plus 15px label, pill active state</span></div></div></div>
+</section>
+
+<section id="screens"><h2>6. Key screens</h2>
+<p>Mock data only illustrates appearance. Scroll sideways to see all six.</p>
+<div class="phones">
+
+<div><div class="ph"><div class="body">
+<div><div class="mute sm">Tuesday, 6 October</div><h4>Good morning, Priya</h4></div>
+<div class="mini" style="background:var(--sec-soft)"><span class="tag" style="background:var(--surf)">Announcement</span><br><b>Water off 10–12 tomorrow</b><br><span class="mute">Block C, for pipe repair.</span></div>
+<div class="mini"><span class="tag a">Today</span> <b>Yoga on the lawn</b><br><span class="mute">6:30 PM · Garden court</span></div>
+<div class="row" style="gap:8px"><span class="chip on">Report issue</span><span class="chip">Book room</span><span class="chip">Pay</span></div>
+<div class="mini"><div class="row" style="gap:8px"><div class="av">AK</div><div><b>Anil K.</b><br><span class="mute">Lost a grey cat near Block B…</span></div></div></div>
+<div class="mini" style="height:56px;background:linear-gradient(135deg,var(--pri-soft),var(--sec-soft))">Map preview</div>
+</div><nav class="bn"><a class="on" href="#screens"><svg><use href="#i-home"/></svg>Home</a><a href="#screens"><svg><use href="#i-cal"/></svg>Calendar</a><a href="#screens"><svg><use href="#i-msg"/></svg>Messages</a><a href="#screens"><svg><use href="#i-bell"/></svg>Updates</a><a href="#screens"><svg><use href="#i-user"/></svg>Profile</a></nav></div>
+<div class="cap">Home: greeting, announcement, next event, quick actions, posts, map, news</div></div>
+
+<div><div class="ph"><div class="body"><h4>Calendar</h4>
+<div class="row" style="gap:8px"><span class="chip on">Oct</span><span class="chip">Mine</span></div>
+<div class="mini"><div class="img" style="height:70px"></div><b style="display:block;margin-top:8px">Diwali potluck</b><span class="mute">Sat 17 Oct · 7 PM · Clubhouse</span><div class="row" style="margin-top:10px;gap:8px"><button class="btn b1" style="min-height:44px;padding:0 18px">RSVP</button><span class="mute">42 going</span></div></div>
+<div class="mini"><b>Yoga on the lawn</b><br><span class="mute">Today · 6:30 PM</span><div class="row" style="margin-top:10px"><button class="btn b3" style="min-height:44px;padding:0 18px"><span class="ok">✓ Going</span></button></div></div>
+</div></div><div class="cap">Calendar: event card with RSVP default and confirmed states</div></div>
+
+<div><div class="ph"><div class="body"><div class="row" style="gap:8px"><div class="av">RS</div><b>Ravi, Block C</b></div>
+<div class="bub them">Is the lift fixed yet?</div><div class="bub me">Technician arrives at 4 PM.</div><div class="bub them">Thanks, I'll keep an eye out.</div>
+<div style="margin-top:auto" class="row"><input class="inp fill" style="flex:1;min-width:0" placeholder="Message"><button class="btn b1" style="padding:0 16px">Send</button></div>
+</div></div><div class="cap">Messages: 18px bubbles, 4px tail corner, 80% max width</div></div>
+
+<div><div class="ph"><div class="body"><h4>Updates</h4>
+<div class="row" style="gap:8px"><span class="chip on">Community</span><span class="chip">For you</span></div>
+<div class="mini" style="border-left:4px solid var(--sec)"><span class="tag">Community</span><br><b>Parking rules change Monday</b></div>
+<div class="mini" style="border-left:4px solid var(--pri)"><span class="tag p">For you</span><br><b>Issue #214 is in progress</b><br><span class="mute">Lift repair · Block C</span></div>
+<div class="mini" style="border-left:4px solid var(--pri)"><span class="tag p">For you</span><br><b>Your RSVP is confirmed</b></div>
+</div></div><div class="cap">Updates: Dusk bar and tag for community, Harbor for personal</div></div>
+
+<div><div class="ph"><div class="body"><div class="row"><div class="av" style="width:64px;height:64px;font-size:20px">PN</div><div><h4>Priya Nair</h4><span class="mute sm">Unit 12B · Resident</span></div></div>
+<div class="mini"><b>My unit</b><br><span class="mute">Block C, Floor 12</span></div><div class="mini"><b>Notifications</b><br><span class="mute">Events, issues, messages</span></div>
+<div class="mini" style="background:var(--sec-soft)"><span class="tag" style="background:var(--surf)">Admin only</span><br><b>Manage residents</b><br><b>Post announcement</b><br><b>Review issues (8)</b></div>
+</div></div><div class="cap">Profile: resident view; the Dusk panel appears only for admins</div></div>
+
+<div><div class="ph"><div class="body"><h4>Report an issue</h4>
+<div class="row" style="gap:8px"><span class="chip on">Lift</span><span class="chip">Water</span><span class="chip">Noise</span><span class="chip">Other</span></div>
+<label class="fld" style="min-width:0"><span>What's wrong?</span><input class="inp" value="Lift stops on floor 8"></label>
+<div class="mini" style="border:2px dashed var(--line);text-align:center;padding:20px"><b>Add a photo</b><br><span class="mute">Tap to upload</span></div>
+<button class="btn b1" style="justify-content:center;margin-top:auto">Send report</button>
+</div></div><div class="cap">Issue form: category chips, labeled field, photo drop area, one primary action</div></div>
+</div></section>
+
+<section id="responsive"><h2>7. Responsive behavior</h2>
+<p>Desktop is a re-composed layout. The bottom bar becomes a left nav, the single column becomes a centered feed, and a right rail holds the calendar and map so they are no longer buried under the feed.</p>
+<div class="scroll"><div class="desk"><div class="sb"><div style="font:700 18px 'Bricolage Grotesque';padding:4px 14px 16px">IDT Community</div>
+<a class="on" href="#responsive"><svg><use href="#i-home"/></svg>Home</a><a href="#responsive"><svg><use href="#i-cal"/></svg>Calendar</a><a href="#responsive"><svg><use href="#i-msg"/></svg>Messages</a><a href="#responsive"><svg><use href="#i-bell"/></svg>Updates</a><a href="#responsive"><svg><use href="#i-user"/></svg>Profile</a></div>
+<div class="feed"><h4 style="margin:0;font:700 26px 'Bricolage Grotesque'">Good morning, Priya</h4><div class="mini" style="background:var(--sec-soft)"><b>Water off 10–12 tomorrow</b></div><div class="mini"><b>Anil K.</b> Lost a grey cat near Block B…</div><div class="mini"><b>Ravi S.</b> Anyone up for badminton tonight?</div></div>
+<div class="rail"><div class="mini"><span class="tag a">Today</span><br><b>Yoga on the lawn</b></div><div class="mini" style="height:90px;background:linear-gradient(135deg,var(--pri-soft),var(--sec-soft))">Map preview</div></div></div></div>
+<div class="scroll" style="margin-top:16px"><table>
+<tr><th>Breakpoint</th><th>Layout</th></tr>
+<tr><td>&lt; 768</td><td>Single column, bottom nav, quick actions as horizontal chips</td></tr>
+<tr><td>768 – 1199</td><td>Centered feed (max 640), 72px icon-only left rail</td></tr>
+<tr><td>≥ 1200 (target 1366–1440)</td><td>240px labeled nav, 640px feed, 320px right rail, 1280 max container</td></tr>
+</table></div></section>
+
+<section id="motion"><h2>8. Motion</h2>
+<p>Motion confirms an action or shows what changed. It never decorates. Animate only <code>transform</code> and <code>opacity</code>, and honor <code>prefers-reduced-motion</code> by removing all movement.</p>
+<div class="scroll"><table>
+<tr><th>Moment</th><th>Behavior</th><th>Duration</th><th>Easing</th></tr>
+<tr><td>Button press</td><td>Scale to 0.97</td><td>150ms</td><td>ease-out</td></tr>
+<tr><td>Hover / focus</td><td>Background and shadow fade</td><td>200ms</td><td>ease-out</td></tr>
+<tr><td>Card reveal</td><td>Fade plus 8px rise, first load only</td><td>250ms</td><td>cubic-bezier(.2,.8,.2,1)</td></tr>
+<tr><td>Page change</td><td>Cross-fade, 12px slide on mobile</td><td>300ms</td><td>ease-in-out</td></tr>
+<tr><td>Modal / sheet</td><td>Sheet rises from bottom, backdrop fades</td><td>300ms</td><td>cubic-bezier(.2,.8,.2,1)</td></tr>
+<tr><td>Feed scroll</td><td>Native scroll, no parallax; skeleton cards while loading</td><td>n/a</td><td>n/a</td></tr>
+</table></div></section>
+
+<section id="a11y"><h2>9. Accessibility</h2>
+<div class="grid">
+<div class="card"><b>Contrast</b><p class="sm mute">Body text 4.5:1 or better, large text and UI components 3:1. Every pairing listed in section 1 passes AA.</p></div>
+<div class="card"><b>Touch targets</b><p class="sm mute">48px minimum for buttons, inputs and nav items (44px absolute floor for compact RSVP). 8px minimum gap between targets.</p></div>
+<div class="card"><b>Focus</b><p class="sm mute">3px Harbor outline with 3px offset on every interactive element. Never remove it. Tab order follows visual order.</p></div>
+<div class="card"><b>Meaning beyond color</b><p class="sm mute">Errors use text plus a message; status uses a label; active nav uses weight and an indicator.</p></div>
+<div class="card"><b>Semantics</b><p class="sm mute">Use <code>nav</code>, <code>main</code>, buttons for actions and links for navigation. Alt text on informative images, labels on all inputs.</p></div>
+<div class="card"><b>Scaling</b><p class="sm mute">Use rem units. Layouts must survive 200% zoom with no horizontal scrolling.</p></div>
+</div></section>
+
+<section id="impl"><h2>10. Implementation notes</h2>
+<div class="grid">
+<div class="card"><b>Stack</b><p class="sm mute">React + Vite, Tailwind CSS with tokens in <code>tailwind.config</code>, Radix UI primitives for modal, tabs and focus handling, lucide-react icons, Storybook for the component library.</p></div>
+<div class="card"><b>Tokens</b><p class="sm mute">Define colors, spacing, radius and type as CSS variables (see this page's <code>:root</code>). Components read tokens only; no raw hex values in component code.</p></div>
+<div class="card"><b>Consistency</b><p class="sm mute">Build each component once with variants and states in Storybook before using it on a screen. Review new screens against the spacing scale and one-primary-button rule.</p></div>
+<div class="card"><b>Handoff</b><p class="sm mute">Export tokens as JSON, icons as SVG (24px, 2px stroke), and photos as WebP at 1x and 2x. Keep the Figma file's styles named to match the token names.</p></div>
+</div></section>
+</main>
+<footer class="wrap" style="padding:32px 20px 64px"><span class="mute sm">IDT Smart Community prototype, design system v1.0</span></footer>
+</body></html>
